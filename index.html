@@ -2,36 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Blockly + Terminal Layout</title>
+    <title>Blockly Layout Only</title>
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <style>
         html, body {
             height: 100%;
             margin: 0;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             background-color: #f5f1f9;
             font-family: sans-serif;
-        }
-
-        #header {
-            padding: 10px;
-            background-color: #e6daf5;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        #main {
-            flex: 1;
-            display: flex;
-            flex-direction: row;
-        }
-
-        #toolbox-area {
-            width: 200px;
-            background-color: #111827;
-            color: white;
-            padding: 8px;
         }
 
         #blocklyDiv {
@@ -39,37 +19,24 @@
             height: 100%;
         }
 
-        #console {
-            background-color: #0d1117;
-            color: #d1d5db;
-            padding: 8px;
-            height: 150px;
-            overflow-y: scroll;
-            font-family: monospace;
+        xml {
+            display: none;
         }
     </style>
 </head>
 
 <body>
-<div id="header">Blockly + Terminal Layout</div>
+<xml id="toolbox">
+    <category name="Loops" colour="%{BKY_LOOPS_HUE}">
+        <block type="controls_repeat_ext"></block>
+    </category>
+    <category name="Math" colour="%{BKY_MATH_HUE}">
+        <block type="math_number"></block>
+    </category>
+    <category name="Variables" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+</xml>
 
-<div id="main">
-    <!-- 툴박스는 XML로 정의되고, JS에서 사용 -->
-    <xml id="toolbox" style="display: none">
-        <category name="Loops" colour="%{BKY_LOOPS_HUE}">
-            <block type="controls_repeat_ext"></block>
-        </category>
-        <category name="Math" colour="%{BKY_MATH_HUE}">
-            <block type="math_number"></block>
-        </category>
-        <category name="Variables" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
-    </xml>
-
-    <div id="toolbox-area"></div>
-    <div id="blocklyDiv"></div>
-</div>
-
-<div id="console"></div>
+<div id="blocklyDiv"></div>
 
 <script>
     const workspace = Blockly.inject('blocklyDiv', {
@@ -91,15 +58,6 @@
             minScale: 0.3,
             scaleSpeed: 1.2,
         },
-    });
-
-    // 블록 생성 또는 이동 시 콘솔에 출력
-    workspace.addChangeListener((event) => {
-        const code = Blockly.JavaScript.workspaceToCode(workspace);
-        const json = Blockly.serialization.workspaces.save(workspace);
-        const log = `[JSON] ${JSON.stringify(json)}\n[JS] ${code}\n`;
-        document.getElementById('console').textContent += log;
-        document.getElementById('console').scrollTop = document.getElementById('console').scrollHeight;
     });
 </script>
 </body>
