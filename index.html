@@ -1,74 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Blockly Only</title>
-    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-    <script src="https://unpkg.com/blockly/javascript_compressed.js" defer></script>
-    <script src="https://unpkg.com/blockly/python_compressed.js" defer></script>
-    <script src="https://unpkg.com/blockly/dart_compressed.js" defer></script>
-    <script src="https://unpkg.com/blockly/lua_compressed.js" defer></script>
-    <script src="https://unpkg.com/blockly/php_compressed.js" defer></script>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+    <base href="$FLUTTER_BASE_HREF">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="A new Flutter project.">
 
-        #blocklyDiv {
-            height: 100%;
-            width: 100%;
-        }
-    </style>
+    <!-- iOS meta tags & icons -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="blockly_sample">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png"/>
+
+    <title>blockly_sample</title>
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-<div id="blocklyDiv"></div>
 
-<xml id="toolbox" style="display: none">
-    <category name="Logic" colour="%{BKY_LOGIC_HUE}">
-        <block type="controls_if"></block>
-    </category>
-    <category name="Loops" colour="%{BKY_LOOPS_HUE}">
-        <block type="controls_repeat_ext"></block>
-    </category>
-    <category name="Math" colour="%{BKY_MATH_HUE}">
-        <block type="math_number"></block>
-    </category>
-    <category name="Text" colour="%{BKY_TEXTS_HUE}">
-        <block type="text"></block>
-    </category>
-</xml>
+<!-- Blockly core & blocks & messages -->
+<script src="https://unpkg.com/blockly/blockly.min.js" defer></script>
+<script src="https://unpkg.com/blockly/blocks_compressed.js" defer></script>
+<script src="https://unpkg.com/blockly/msg/en.js" defer></script>
 
-<script>
-    window.addEventListener('load', () => {
-        Blockly.inject('blocklyDiv', {
-            toolbox: document.getElementById('toolbox'),
-            grid: {
-                spacing: 20,
-                length: 3,
-                colour: '#ccc',
-                snap: true
-            },
-            trashcan: true,
-            zoom: {
-                controls: true,
-                wheel: true
-            }
-        });
-    });
-</script>
+<!-- 필요시 한국어: <script src="https://unpkg.com/blockly/msg/ko.js" defer></script> -->
+
+<!-- 선택: 코드 생성기 -->
+<script src="https://unpkg.com/blockly/javascript_compressed.js" defer></script>
+<script src="https://unpkg.com/blockly/python_compressed.js" defer></script>
+<script src="https://unpkg.com/blockly/dart_compressed.js" defer></script>
+<script src="https://unpkg.com/blockly/lua_compressed.js" defer></script>
+<script src="https://unpkg.com/blockly/php_compressed.js" defer></script>
 
 <!-- ✅ 커스텀 prompt/confirm/alert 오버라이드 -->
 <script id="blockly-dialog-override">
     (function () {
         function showPromptModal(message, defaultValue, onDone) {
+            // 배경 오버레이
             const overlay = document.createElement('div');
             overlay.style.position = 'fixed';
             overlay.style.inset = '0';
             overlay.style.background = 'rgba(0,0,0,.35)';
             overlay.style.zIndex = 9998;
 
+            // 모달(요청하신 디자인 적용)
             const modal = document.createElement('div');
             modal.style.position = 'fixed';
             modal.style.top = '50%';
@@ -133,8 +110,9 @@
 
             okButton.onclick = () => cleanupAndReturn(String(input.value));
             cancelButton.onclick = () => cleanupAndReturn(null);
-            overlay.onclick = () => cleanupAndReturn(null);
+            overlay.onclick = () => cleanupAndReturn(null); // 오버레이 클릭 시 취소
 
+            // 키보드: Enter=확인, Esc=취소
             modal.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -160,13 +138,16 @@
 
         function installBlocklyDialogs() {
             if (!window.Blockly || !Blockly.dialog) return false;
+            // prompt
             Blockly.dialog.setPrompt(function (message, defaultValue, callback) {
                 showPromptModal(message, defaultValue, callback);
             });
+            // confirm (간단히 기본 confirm 사용; 필요 시 커스텀 모달로 교체 가능)
             Blockly.dialog.setConfirm(function (message, callback) {
                 const ok = window.confirm(message || '');
                 callback(!!ok);
             });
+            // alert
             Blockly.dialog.setAlert(function (message, opt_callback) {
                 window.alert(message || '');
                 if (opt_callback) opt_callback();
@@ -174,6 +155,7 @@
             return true;
         }
 
+        // Blockly가 로드될 때까지 대기 후 설치
         (function wait() {
             if (!installBlocklyDialogs()) {
                 setTimeout(wait, 0);
@@ -182,7 +164,7 @@
     })();
 </script>
 
-<!-- Flutter 로딩용 -->
+<!-- Flutter bootstrap: 가능한 한 마지막에 두세요 -->
 <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
