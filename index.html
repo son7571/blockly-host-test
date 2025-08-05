@@ -1,75 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8"/>
-    <title>Blockly Test</title>
+    <meta charset="utf-8">
+    <title>Blockly + Terminal Layout</title>
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <style>
         html, body {
             height: 100%;
             margin: 0;
-            padding: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f1f9;
+            font-family: sans-serif;
+        }
+
+        #header {
+            padding: 10px;
+            background-color: #e6daf5;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        #main {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+        }
+
+        #toolbox-area {
+            width: 200px;
+            background-color: #111827;
+            color: white;
+            padding: 8px;
         }
 
         #blocklyDiv {
-            height: calc(100% - 40px);
-            width: 100%;
+            flex: 1;
+            height: 100%;
         }
 
-        #buttonBar {
-            height: 40px;
-            background: #f3f3f3;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            gap: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-
-        button {
-            padding: 6px 12px;
-            cursor: pointer;
+        #console {
+            background-color: #0d1117;
+            color: #d1d5db;
+            padding: 8px;
+            height: 150px;
+            overflow-y: scroll;
+            font-family: monospace;
         }
     </style>
 </head>
-<body>
 
-<div id="buttonBar">
-    <button onclick="runCode()">실행</button>
-    <button onclick="getCode()">블록 상태 확인</button>
+<body>
+<div id="header">Blockly + Terminal Layout</div>
+
+<div id="main">
+    <!-- 툴박스는 XML로 정의되고, JS에서 사용 -->
+    <xml id="toolbox" style="display: none">
+        <category name="Loops" colour="%{BKY_LOOPS_HUE}">
+            <block type="controls_repeat_ext"></block>
+        </category>
+        <category name="Math" colour="%{BKY_MATH_HUE}">
+            <block type="math_number"></block>
+        </category>
+        <category name="Variables" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+    </xml>
+
+    <div id="toolbox-area"></div>
+    <div id="blocklyDiv"></div>
 </div>
 
-<div id="blocklyDiv"></div>
-
-<xml id="toolbox" style="display: none">
-    <block type="controls_if"></block>
-    <block type="logic_compare"></block>
-    <block type="math_number"></block>
-    <block type="text"></block>
-    <block type="text_print"></block>
-</xml>
+<div id="console"></div>
 
 <script>
     const workspace = Blockly.inject('blocklyDiv', {
-        toolbox: document.getElementById('toolbox')
+        toolbox: document.getElementById('toolbox'),
+        horizontalLayout: false,
+        trashcan: true,
+        renderer: 'zelos',
+        grid: {
+            spacing: 20,
+            length: 2,
+            colour: '#ccc',
+            snap: true,
+        },
+        zoom: {
+            controls: true,
+            wheel: true,
+            startScale: 1.0,
+            maxScale: 3,
+            minScale: 0.3,
+            scaleSpeed: 1.2,
+        },
     });
 
-    function runCode() {
+    // 블록 생성 또는 이동 시 콘솔에 출력
+    workspace.addChangeListener((event) => {
         const code = Blockly.JavaScript.workspaceToCode(workspace);
-        try {
-            // 안전하게 eval로 실행 (보안상 sandbox 필요)
-            eval(code);
-        } catch (e) {
-            alert("코드 실행 중 오류: " + e);
-        }
-    }
-
-    function getCode() {
-        const code = Blockly.JavaScript.workspaceToCode(workspace);
-        console.log("JS 코드:", code);
-        alert("콘솔창을 확인하세요!");
-    }
+        const json = Blockly.serialization.workspaces.save(workspace);
+        const log = `[JSON] ${JSON.stringify(json)}\n[JS] ${code}\n`;
+        document.getElementById('console').textContent += log;
+        document.getElementById('console').scrollTop = document.getElementById('console').scrollHeight;
+    });
 </script>
-
 </body>
 </html>
