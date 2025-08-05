@@ -2,62 +2,51 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Blockly Layout Only</title>
+    <title>Blockly Only</title>
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <style>
         html, body {
-            height: 100%;
             margin: 0;
+            height: 100%;
             display: flex;
-            flex-direction: row;
-            background-color: #f5f1f9;
-            font-family: sans-serif;
         }
 
         #blocklyDiv {
-            flex: 1;
             height: 100%;
-        }
-
-        xml {
-            display: none;
+            width: 100%;
         }
     </style>
 </head>
-
 <body>
-<xml id="toolbox">
-    <category name="Loops" colour="%{BKY_LOOPS_HUE}">
-        <block type="controls_repeat_ext"></block>
+<div id="blocklyDiv"></div>
+
+<xml id="toolbox" style="display: none">
+    <category name="Logic" colour="%{BKY_LOGIC_HUE}">
+        <block type="controls_if"></block>
     </category>
     <category name="Math" colour="%{BKY_MATH_HUE}">
         <block type="math_number"></block>
     </category>
-    <category name="Variables" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+    <category name="Text" colour="%{BKY_TEXTS_HUE}">
+        <block type="text"></block>
+        <block type="text_print"></block>
+    </category>
 </xml>
-
-<div id="blocklyDiv"></div>
 
 <script>
     const workspace = Blockly.inject('blocklyDiv', {
         toolbox: document.getElementById('toolbox'),
-        horizontalLayout: false,
-        trashcan: true,
-        renderer: 'zelos',
         grid: {
             spacing: 20,
-            length: 2,
+            length: 3,
             colour: '#ccc',
             snap: true,
         },
+        trashcan: true,
         zoom: {
             controls: true,
             wheel: true,
-            startScale: 1.0,
-            maxScale: 3,
-            minScale: 0.3,
-            scaleSpeed: 1.2,
-        },
+        }
     });
 </script>
 </body>
