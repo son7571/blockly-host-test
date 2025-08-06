@@ -5,6 +5,8 @@ import {Names, NameType} from '../../core/names.js';
 import * as stringUtils from '../../core/utils/string.js';
 import * as Variables from '../../core/variables.js';
 import type {Workspace} from '../../core/workspace.js';
+
+// 각 블록 코드 생성기 import
 import './math.js';
 import './logic.js';
 import './loops.js';
@@ -44,7 +46,7 @@ export class JavaGenerator extends CodeGenerator {
         this.isInitialized = false;
 
         for (const key in Order) {
-            const value = Order[key];
+            const value = Order[key as keyof typeof Order];
             if (typeof value === 'string') continue;
             (this as any)['ORDER_' + key] = value;
         }
@@ -168,5 +170,5 @@ export class JavaGenerator extends CodeGenerator {
     }
 }
 
-export {JavaGenerator, Order} from './java_generator.js';
-
+// 🔚 기본 인스턴스를 export (다른 파일에서 import 용)
+export default new JavaGenerator();
