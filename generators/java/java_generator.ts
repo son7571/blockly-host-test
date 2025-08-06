@@ -5,6 +5,13 @@ import {Names, NameType} from '../../core/names.js';
 import * as stringUtils from '../../core/utils/string.js';
 import * as Variables from '../../core/variables.js';
 import type {Workspace} from '../../core/workspace.js';
+import './math.js';
+import './logic.js';
+import './loops.js';
+import './text.js';
+import './lists.js';
+import './variables.js';
+import './procedures.js';
 
 export enum Order {
     ATOMIC = 0,             // 숫자, 변수
@@ -161,4 +168,5 @@ export class JavaGenerator extends CodeGenerator {
     }
 }
 
-export default new JavaGenerator();
+export {JavaGenerator, Order} from './java_generator.js';
+
