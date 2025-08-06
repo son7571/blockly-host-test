@@ -80,9 +80,16 @@
   </xml>
   `;
 
-    // 🧱 Java generator 인스턴스 주입
-    // ⚠️ 아래 줄에서 javaGenerator는 네가 만든 모듈이 export한 변수여야 함
+    <!-- 1. Blockly core (이미 있다면 생략 가능) -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+
+<!-- 2. 네가 만든 java_compressed.js (여기에 javaGenerator가 있음) -->
+<script src="/blockly/java_compressed.js"></script>
+
+<!-- 3. 이제 여기서 인스턴스 주입 가능 -->
+<script>
     Blockly.Java = javaGenerator;
+</script>
 
     const workspace = Blockly.inject('blocklyDiv', {
         toolbox: toolbox,
