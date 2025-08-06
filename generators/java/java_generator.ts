@@ -160,3 +160,5 @@ export class JavaGenerator extends CodeGenerator {
         return at;
     }
 }
+
+export default new JavaGenerator();

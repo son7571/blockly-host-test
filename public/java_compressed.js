@@ -22,7 +22,8 @@ var javaGenerator = (() => {
   var java_generator_exports = {};
   __export(java_generator_exports, {
     JavaGenerator: () => JavaGenerator,
-    Order: () => Order
+    Order: () => Order,
+    default: () => java_generator_default
   });
 
   // core/touch.ts
@@ -2817,6 +2818,7 @@ input[type=number] {
       return at;
     }
   };
+  var java_generator_default = new JavaGenerator();
   return __toCommonJS(java_generator_exports);
 })();
 /**
